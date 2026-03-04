@@ -5,3 +5,7 @@
 WindowsIcons.rc
 resource.h
 WindowsIcons.res
+
+# ResourceScriptGenerator build artifacts
+ResourceScriptGenerator/bin/
+ResourceScriptGenerator/obj/

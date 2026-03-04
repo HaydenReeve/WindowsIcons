@@ -16,8 +16,15 @@ if not "%OS%"=="Windows_NT" (
 )
 
 REM Step 1: Generate the resource script
-echo [1/4] Generating resource script from Icons directory...
-powershell -ExecutionPolicy Bypass -File "%~dp0GenerateResourceScript.ps1"
+echo [1/5] Building resource script generator...
+dotnet build "%~dp0ResourceScriptGenerator\ResourceScriptGenerator.csproj" -c Release --nologo -v quiet
+if errorlevel 1 (
+    echo ERROR: Failed to build resource script generator
+    exit /b 1
+)
+
+echo [2/5] Generating resource script from Icons directory...
+dotnet run --project "%~dp0ResourceScriptGenerator\ResourceScriptGenerator.csproj" -c Release --no-build
 if errorlevel 1 (
     echo ERROR: Failed to generate resource script
     exit /b 1
@@ -25,7 +32,7 @@ if errorlevel 1 (
 echo.
 
 REM Step 2: Check for Visual Studio tools
-echo [2/4] Checking for Visual Studio Build Tools...
+echo [3/5] Checking for Visual Studio Build Tools...
 
 REM Try to find vswhere (installed with VS 2017+)
 set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
@@ -74,7 +81,7 @@ if exist "%VSINSTALLDIR%\VC\Auxiliary\Build\vcvarsall.bat" (
 
 REM Step 3: Compile the resource file
 echo.
-echo [3/4] Compiling resources with RC.EXE...
+echo [4/5] Compiling resources with RC.EXE...
 rc.exe /nologo /fo "%~dp0WindowsIcons.res" "%~dp0WindowsIcons.rc"
 if errorlevel 1 (
     echo ERROR: Resource compilation failed
@@ -84,7 +91,7 @@ echo Resource compilation successful
 
 REM Step 4: Link into DLL
 echo.
-echo [4/4] Linking resource-only DLL...
+echo [5/5] Linking resource-only DLL...
 
 REM Create output directory
 if not exist "%~dp0bin" mkdir "%~dp0bin"
