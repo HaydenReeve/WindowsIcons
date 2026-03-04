@@ -1,2 +1,11 @@
 ﻿/bin/
 /obj/
+
+# Generated resource files
+WindowsIcons.rc
+resource.h
+WindowsIcons.res
+
+# ResourceScriptGenerator build artifacts
+ResourceScriptGenerator/bin/
+ResourceScriptGenerator/obj/
