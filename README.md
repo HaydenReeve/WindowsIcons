@@ -1,13 +1,51 @@
 # Windows 11 Icon Pack
 
-A complete pack with lots of icons from various places in windows 11 as well as other microsoft products.
+A complete icon pack with icons from Windows 11 and other Microsoft products.
 
 ## Instructions
 
-You can access the icons in one of two ways. 
+You can access the icons in three ways.
 
-- Simply download the repo and grab the icons you want, handily stored in a .ico format.
-- Either compile, or grab the pre-compiled .dll from the releases page and use the icons from there, just like how windows icon browser works natively.
+- Download the repo and use the individual `.ico` files.
+- Run `dotnet build` to produce managed `net8.0` output with embedded manifest resources for .NET use.
+- Run `dotnet msbuild -t:BuildNativeIconDll -p:Configuration=Release -p:NativeDllMachine=x64` to produce native `WindowsIcons.dll` output for shell-style icon browsing and other native consumers.
+
+## Build outputs
+
+### Managed assembly from `dotnet build`
+
+`dotnet build` produces the existing managed assembly. This is a `net8.0` DLL that stores the icons as embedded manifest resources for managed .NET code.
+
+This output is not a shell32-style native icon DLL.
+
+### Native resource-only icon DLL from `BuildNativeIconDll`
+
+`BuildNativeIconDll` produces a native, resource-only icon DLL. Use this output when you need shell32-style icon browsing behaviour instead of managed resources.
+
+#### Build flow
+
+`BuildNativeIconDll` runs a `.NET 10` helper project under `tools\WindowsIcons.NativeBuild` from MSBuild. The helper uses AsmResolver to write `WindowsIcons.dll` and inject real Win32 icon resources into the output DLL.
+
+The result is native-icon-browsable through standard Windows APIs, even though the build is produced through managed tooling. No PowerShell, `rc.exe`, or `link.exe` is involved.
+
+#### Recommended command
+
+```text
+dotnet msbuild -t:BuildNativeIconDll -p:Configuration=Release -p:NativeDllMachine=x64
+```
+
+#### Output location
+
+Native output is written to:
+
+- `bin\<Configuration>\native\<Machine>\WindowsIcons.dll`
+
+#### Intermediate files
+
+Native intermediate outputs are written under `obj\NativeIconDll\<Configuration>\<Machine>\`, including:
+
+- `icons.rc`
+- `icon-map.csv`
 
 ## Sources
 

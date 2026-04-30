@@ -2,11 +2,38 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <Company />
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Icons\**\*.ico" />
-      <EmbeddedResource Include="Icons\**\*.ico" />
+        <Compile Remove="tools\**\*.cs" />
+        <EmbeddedResource Include="Icons\**\*.ico" />
     </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <NativeIconBuildProject>$(MSBuildProjectDirectory)\tools\WindowsIcons.NativeBuild\WindowsIcons.NativeBuild.csproj</NativeIconBuildProject>
+        <NativeIconBuildTargetFramework>net10.0</NativeIconBuildTargetFramework>
+        <NativeIconBuildOutputPath>$(MSBuildProjectDirectory)\tools\WindowsIcons.NativeBuild\bin\$(Configuration)\$(NativeIconBuildTargetFramework)\WindowsIcons.NativeBuild.dll</NativeIconBuildOutputPath>
+        <NativeIconDllMachine Condition="'$(NativeIconDllMachine)' == '' and '$(PlatformTarget)' != ''">$(PlatformTarget)</NativeIconDllMachine>
+        <NativeIconDllMachine Condition="'$(NativeIconDllMachine)' == '' and '$(Platform)' != ''">$(Platform)</NativeIconDllMachine>
+        <NativeIconDllMachine Condition="'$(NativeIconDllMachine)' == ''">$(PROCESSOR_ARCHITECTURE)</NativeIconDllMachine>
+    </PropertyGroup>
+
+    <Target Name="BuildNativeIconDll" DependsOnTargets="Restore;Build">
+        <Error Condition="!Exists('$(NativeIconBuildProject)')" Text="Native icon build project not found: $(NativeIconBuildProject)" />
+        <MSBuild
+            Projects="$(NativeIconBuildProject)"
+            Targets="Restore;Build"
+            Properties="Configuration=$(Configuration)" />
+        <Error Condition="!Exists('$(NativeIconBuildOutputPath)')" Text="Native icon build helper not found after build: $(NativeIconBuildOutputPath)" />
+        <Exec
+            WorkingDirectory="$(MSBuildProjectDirectory)"
+            Command="dotnet &quot;$(NativeIconBuildOutputPath)&quot; --project-dir &quot;$(MSBuildProjectDirectory)&quot; --configuration &quot;$(Configuration)&quot; --machine &quot;$(NativeIconDllMachine)&quot; --input-assembly &quot;$(TargetPath)&quot;" />
+    </Target>
 
 </Project>
