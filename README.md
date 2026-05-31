@@ -1,88 +1,58 @@
 # Windows 11 Icon Pack
 
-A complete icon pack with icons from Windows 11 and other Microsoft products.
+A complete icon pack containing icons from Windows 11 and other Microsoft products, organised into categorised `.ico` files.
 
-## Instructions
+## Usage
 
-You can access the icons in three ways.
+Access the icons in three ways:
 
-- Download the repo and use the individual `.ico` files.
-- Run `dotnet build` to produce managed `net8.0` output with embedded manifest resources for .NET use.
-- Run `dotnet msbuild -t:BuildNativeIconDll -p:Configuration=Release -p:NativeDllMachine=x64` to produce native `WindowsIcons.dll` output for shell-style icon browsing and other native consumers.
+- Download the repository and use the individual `.ico` files directly from `Icons/`.
+- Run `dotnet build` to produce a managed .NET 8 assembly with icons embedded as manifest resources.
+- Run the native build target to produce a resource-only DLL suitable for shell-style icon browsing.
 
-## Build outputs
+## Building
 
-### Managed assembly from `dotnet build`
+### Managed assembly
 
-`dotnet build` produces the existing managed assembly. This is a `net8.0` DLL that stores the icons as embedded manifest resources for managed .NET code.
+```sh
+dotnet build -c Release
+```
 
-This output is not a shell32-style native icon DLL.
+Produces `bin/Release/net8.0/WindowsIcons.dll` with all icons as embedded resources for .NET consumption.
 
-### Native resource-only icon DLL from `BuildNativeIconDll`
+### Native icon DLL
 
-`BuildNativeIconDll` produces a native, resource-only icon DLL. Use this output when you need shell32-style icon browsing behaviour instead of managed resources.
-
-#### Build flow
-
-`BuildNativeIconDll` runs a `.NET 10` helper project under `tools\WindowsIcons.NativeBuild` from MSBuild. The helper uses AsmResolver to write `WindowsIcons.dll` and inject real Win32 icon resources into the output DLL.
-
-The result is native-icon-browsable through standard Windows APIs, even though the build is produced through managed tooling. No PowerShell, `rc.exe`, or `link.exe` is involved.
-
-#### Recommended command
-
-```text
+```sh
 dotnet msbuild -t:BuildNativeIconDll -p:Configuration=Release -p:NativeDllMachine=x64
 ```
 
-#### Output location
+Produces `bin/Release/native/x64/WindowsIcons.dll` — a native, resource-only DLL browsable through standard Windows shell APIs (`PickIconDlg`, `ExtractIconEx`, etc.). No `rc.exe` or `link.exe` required; the build uses the `tools/WindowsIcons.NativeBuild` helper with AsmResolver.
 
-Native output is written to:
+Supported machine targets: `x64`, `x86`, `arm64`.
 
-- `bin\<Configuration>\native\<Machine>\WindowsIcons.dll`
+## Icon categories
 
-#### Intermediate files
-
-Native intermediate outputs are written under `obj\NativeIconDll\<Configuration>\<Machine>\`, including:
-
-- `icons.rc`
-- `icon-map.csv`
+| Category | Count |
+|---|---|
+| applications | 181 |
+| devices | 84 |
+| emblems | 66 |
+| files | 111 |
+| folders | 39 |
+| objects | 40 |
 
 ## Sources
 
-### Built in
+### Built-in Windows
 
-- windowsApps,
-- imageres.dll,
-- shell32.dll,
-- ddores.dll*,
-- other system32 locations.
+- Windows Apps
+- `imageres.dll`
+- `shell32.dll`
+- `ddores.dll`
+- Other `system32` locations
 
-### Superfolders
+### Third-party
 
-Superfolders for the start, taskview, widgets, search, and volume icons.
-
-https://github.com/pronoy2108/Superfolders/tree/v4.0
-
-### Sysinternals
-
-Sysinternals for internal, autoruns, packetviewer, processmonitor, and windowsobject icons.
-
-https://docs.microsoft.com/en-us/sysinternals/
-
-### Powertoys
-
-Powertoys for the powertoys icon.
-
-https://docs.microsoft.com/en-us/windows/powertoys/
-
-## Changelog
-
-### v3.0.0
-
-- Wrapped icons in a .net8 .dll package for easier consumption.
-- Updated documentation.
-
-### v2.0.1
-
-- Unpacked .zip in preparation for conversion into central .dll files for ease of use.
-- Updated documentation.
+- [Superfolders](https://github.com/pronoy2108/Superfolders/tree/v4.0) — start, taskview, widgets, search, and volume icons.
+- [Sysinternals](https://docs.microsoft.com/en-us/sysinternals/) — autoruns, packetviewer, processmonitor, and windowsobject icons.
+- [PowerToys](https://docs.microsoft.com/en-us/windows/powertoys/) — PowerToys icon.

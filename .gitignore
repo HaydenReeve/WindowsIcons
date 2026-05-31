@@ -1,4 +1,12 @@
+# Build output
 /bin/
 /obj/
 **/bin/
 **/obj/
+
+# IDE
+.idea/
+*.DotSettings
+*.DotSettings.user
+*.user
+*.suo

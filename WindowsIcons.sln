@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsIcons", "WindowsIcons.csproj", "{11FFFCEA-6108-4D7E-999C-E2C121FE4DC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsIcons.NativeBuild", "tools\WindowsIcons.NativeBuild\WindowsIcons.NativeBuild.csproj", "{847CC0B6-3904-4481-B272-6FC30BDFBC63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{11FFFCEA-6108-4D7E-999C-E2C121FE4DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11FFFCEA-6108-4D7E-999C-E2C121FE4DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11FFFCEA-6108-4D7E-999C-E2C121FE4DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{847CC0B6-3904-4481-B272-6FC30BDFBC63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{847CC0B6-3904-4481-B272-6FC30BDFBC63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{847CC0B6-3904-4481-B272-6FC30BDFBC63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{847CC0B6-3904-4481-B272-6FC30BDFBC63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
