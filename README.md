@@ -1,50 +1,58 @@
 # Windows 11 Icon Pack
 
-A complete pack with lots of icons from various places in windows 11 as well as other microsoft products.
+A complete icon pack containing icons from Windows 11 and other Microsoft products, organised into categorised `.ico` files.
 
-## Instructions
+## Usage
 
-You can access the icons in one of two ways. 
+Access the icons in three ways:
 
-- Simply download the repo and grab the icons you want, handily stored in a .ico format.
-- Either compile, or grab the pre-compiled .dll from the releases page and use the icons from there, just like how windows icon browser works natively.
+- Download the repository and use the individual `.ico` files directly from `Icons/`.
+- Run `dotnet build` to produce a managed .NET 8 assembly with icons embedded as manifest resources.
+- Run the native build target to produce a resource-only DLL suitable for shell-style icon browsing.
+
+## Building
+
+### Managed assembly
+
+```sh
+dotnet build -c Release
+```
+
+Produces `bin/Release/net8.0/WindowsIcons.dll` with all icons as embedded resources for .NET consumption.
+
+### Native icon DLL
+
+```sh
+dotnet msbuild -t:BuildNativeIconDll -p:Configuration=Release -p:NativeDllMachine=x64
+```
+
+Produces `bin/Release/native/x64/WindowsIcons.dll` — a native, resource-only DLL browsable through standard Windows shell APIs (`PickIconDlg`, `ExtractIconEx`, etc.). No `rc.exe` or `link.exe` required; the build uses the `tools/WindowsIcons.NativeBuild` helper with AsmResolver.
+
+Supported machine targets: `x64`, `x86`, `arm64`.
+
+## Icon categories
+
+| Category | Count |
+|---|---|
+| applications | 181 |
+| devices | 84 |
+| emblems | 66 |
+| files | 111 |
+| folders | 39 |
+| objects | 40 |
 
 ## Sources
 
-### Built in
+### Built-in Windows
 
-- windowsApps,
-- imageres.dll,
-- shell32.dll,
-- ddores.dll*,
-- other system32 locations.
+- Windows Apps
+- `imageres.dll`
+- `shell32.dll`
+- `ddores.dll`
+- Other `system32` locations
 
-### Superfolders
+### Third-party
 
-Superfolders for the start, taskview, widgets, search, and volume icons.
-
-https://github.com/pronoy2108/Superfolders/tree/v4.0
-
-### Sysinternals
-
-Sysinternals for internal, autoruns, packetviewer, processmonitor, and windowsobject icons.
-
-https://docs.microsoft.com/en-us/sysinternals/
-
-### Powertoys
-
-Powertoys for the powertoys icon.
-
-https://docs.microsoft.com/en-us/windows/powertoys/
-
-## Changelog
-
-### v3.0.0
-
-- Wrapped icons in a .net8 .dll package for easier consumption.
-- Updated documentation.
-
-### v2.0.1
-
-- Unpacked .zip in preparation for conversion into central .dll files for ease of use.
-- Updated documentation.
+- [Superfolders](https://github.com/pronoy2108/Superfolders/tree/v4.0) — start, taskview, widgets, search, and volume icons.
+- [Sysinternals](https://docs.microsoft.com/en-us/sysinternals/) — autoruns, packetviewer, processmonitor, and windowsobject icons.
+- [PowerToys](https://docs.microsoft.com/en-us/windows/powertoys/) — PowerToys icon.
